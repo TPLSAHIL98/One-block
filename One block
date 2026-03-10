@@ -1,10 +1,21 @@
 -- One Block Hub | Created by Sahil | Version 0.1
 
 ------------------------------------------------
--- GAME LOCK (SHOW SCREEN FOR 15 SECONDS)
+-- WAIT FOR GAME LOAD
 ------------------------------------------------
 
-if game.PlaceId ~= 87124461329967 then
+repeat task.wait() until game:IsLoaded()
+
+------------------------------------------------
+-- GAME LOCK (LOBBY + GAME)
+------------------------------------------------
+
+local AllowedPlaces = {
+    [87124461329967] = true,
+    [78296331391950] = true
+}
+
+if not AllowedPlaces[game.PlaceId] then
 
 local ScreenGui = Instance.new("ScreenGui")
 local TextLabel = Instance.new("TextLabel")
@@ -30,7 +41,7 @@ end
 -- LOAD RAYFIELD
 ------------------------------------------------
 
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 
 local Window = Rayfield:CreateWindow({
    Name = "One Block Hub",
@@ -58,7 +69,7 @@ local SelectedItem = "Magnet"
 local StackAmount = 1
 
 ------------------------------------------------
--- STACK SLIDERS
+-- STACK SLIDER PLATFORM
 ------------------------------------------------
 
 PlatformTab:CreateSlider({
@@ -71,6 +82,10 @@ PlatformTab:CreateSlider({
    end
 })
 
+------------------------------------------------
+-- STACK SLIDER GENERAL
+------------------------------------------------
+
 GeneralTab:CreateSlider({
    Name = "Stack Amount",
    Range = {1,100},
@@ -82,7 +97,7 @@ GeneralTab:CreateSlider({
 })
 
 ------------------------------------------------
--- GENERAL WORKBENCH
+-- GENERAL ITEMS DROPDOWN
 ------------------------------------------------
 
 GeneralTab:CreateDropdown({
@@ -100,6 +115,10 @@ GeneralTab:CreateDropdown({
       SelectedItem = Value[1]
    end
 })
+
+------------------------------------------------
+-- GENERAL GIVE BUTTON
+------------------------------------------------
 
 GeneralTab:CreateButton({
    Name = "Give Item",
@@ -130,11 +149,11 @@ GeneralTab:CreateButton({
 })
 
 ------------------------------------------------
--- PLATFORM WORKBENCH
+-- PLATFORM DROPDOWN
 ------------------------------------------------
 
 PlatformTab:CreateDropdown({
-   Name = "Select Block",
+   Name = "Select Platform",
    Options = {
       "Cherry",
       "Grass",
@@ -151,8 +170,12 @@ PlatformTab:CreateDropdown({
    end
 })
 
+------------------------------------------------
+-- PLATFORM GIVE BUTTON
+------------------------------------------------
+
 PlatformTab:CreateButton({
-   Name = "Give Block",
+   Name = "Give Platform",
    Callback = function()
 
       for i = 1, StackAmount do
