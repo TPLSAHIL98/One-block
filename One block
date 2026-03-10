@@ -1,0 +1,174 @@
+-- One Block Hub | Created by Sahil | Version 0.1
+
+-- GAME LOCK (Only One Block)
+if game.PlaceId ~= 87124461329967 then
+    game:GetService("StarterGui"):SetCore("SendNotification",{
+        Title = "One Block Hub",
+        Text = "This script only works in One Block!",
+        Duration = 5
+    })
+    return
+end
+
+-- Load Rayfield
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "One Block Hub",
+   LoadingTitle = "One Block Hub",
+   LoadingSubtitle = "Created by Sahil",
+   ConfigurationSaving = {
+      Enabled = false
+   }
+})
+
+-- Tabs
+local PlatformTab = Window:CreateTab("Platform Workbench", 4483362458)
+local GeneralTab = Window:CreateTab("General Workbench", 4483362458)
+local InfoTab = Window:CreateTab("Info", 4483362458)
+
+-- Variables
+local SelectedBlock = "Cherry"
+local SelectedItem = "Magnet"
+local StackAmount = 1
+
+------------------------------------------------
+-- STACK SLIDERS
+------------------------------------------------
+
+PlatformTab:CreateSlider({
+   Name = "Stack Amount",
+   Range = {1,100},
+   Increment = 1,
+   CurrentValue = 1,
+   Callback = function(Value)
+      StackAmount = Value
+   end
+})
+
+GeneralTab:CreateSlider({
+   Name = "Stack Amount",
+   Range = {1,100},
+   Increment = 1,
+   CurrentValue = 1,
+   Callback = function(Value)
+      StackAmount = Value
+   end
+})
+
+------------------------------------------------
+-- GENERAL WORKBENCH
+------------------------------------------------
+
+GeneralTab:CreateDropdown({
+   Name = "Select Item",
+   Options = {
+      "Magnet",
+      "Gold Magnet",
+      "Infinity Magnet",
+      "Bandage",
+      "Medkit"
+   },
+   CurrentOption = {"Magnet"},
+   MultipleOptions = false,
+   Callback = function(Value)
+      SelectedItem = Value[1]
+   end
+})
+
+GeneralTab:CreateButton({
+   Name = "Give Item",
+   Callback = function()
+
+      for i = 1, StackAmount do
+
+         local args = {
+            SelectedItem,
+            0
+         }
+
+         game:GetService("ReplicatedStorage")
+         :WaitForChild("PurchaseGeneral")
+         :FireServer(unpack(args))
+
+         task.wait(0.2)
+
+      end
+
+      Rayfield:Notify({
+         Title = "Success",
+         Content = SelectedItem.." x"..StackAmount.." given!",
+         Duration = 3
+      })
+
+   end
+})
+
+------------------------------------------------
+-- PLATFORM WORKBENCH
+------------------------------------------------
+
+PlatformTab:CreateDropdown({
+   Name = "Select Block",
+   Options = {
+      "Cherry",
+      "Grass",
+      "Stone",
+      "Birch",
+      "Bloodwood",
+      "Acacia",
+      "Blackstone"
+   },
+   CurrentOption = {"Cherry"},
+   MultipleOptions = false,
+   Callback = function(Value)
+      SelectedBlock = Value[1]
+   end
+})
+
+PlatformTab:CreateButton({
+   Name = "Give Block",
+   Callback = function()
+
+      for i = 1, StackAmount do
+
+         local args = {
+            SelectedBlock.." Platform",
+            0
+         }
+
+         game:GetService("ReplicatedStorage")
+         :WaitForChild("PurchaseTool")
+         :FireServer(unpack(args))
+
+         task.wait(0.2)
+
+      end
+
+      Rayfield:Notify({
+         Title = "Success",
+         Content = SelectedBlock.." x"..StackAmount.." given!",
+         Duration = 3
+      })
+
+   end
+})
+
+------------------------------------------------
+-- INFO TAB
+------------------------------------------------
+
+InfoTab:CreateParagraph({
+Title = "Created by Sahil",
+Content = "Version 0.1"
+})
+
+InfoTab:CreateParagraph({
+Title = "Executor Supported",
+Content = "Delta\nCodex"
+})
+
+InfoTab:CreateParagraph({
+Title = "Updates",
+Content = "More Updates In Feature :)"
+})
