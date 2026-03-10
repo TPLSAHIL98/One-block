@@ -1,7 +1,7 @@
 -- One Block Hub | Created by Sahil | Version 0.1
 
 ------------------------------------------------
--- GAME LOCK (SHOW SCREEN MESSAGE)
+-- GAME LOCK (SHOW SCREEN FOR 15 SECONDS)
 ------------------------------------------------
 
 if game.PlaceId ~= 87124461329967 then
@@ -17,7 +17,11 @@ TextLabel.BackgroundColor3 = Color3.fromRGB(0,0,0)
 TextLabel.TextColor3 = Color3.fromRGB(255,0,0)
 TextLabel.TextScaled = true
 TextLabel.Font = Enum.Font.GothamBold
-TextLabel.Text = "This Script Only Works On One Block"
+TextLabel.Text = "This Script Only Works On One Block\n\nClosing in 15 seconds..."
+
+task.wait(15)
+
+ScreenGui:Destroy()
 
 return
 end
