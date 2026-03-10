@@ -1,16 +1,31 @@
 -- One Block Hub | Created by Sahil | Version 0.1
 
--- GAME LOCK (Only One Block)
+------------------------------------------------
+-- GAME LOCK (SHOW SCREEN MESSAGE)
+------------------------------------------------
+
 if game.PlaceId ~= 87124461329967 then
-    game:GetService("StarterGui"):SetCore("SendNotification",{
-        Title = "One Block Hub",
-        Text = "This script only works in One Block!",
-        Duration = 5
-    })
-    return
+
+local ScreenGui = Instance.new("ScreenGui")
+local TextLabel = Instance.new("TextLabel")
+
+ScreenGui.Parent = game:GetService("CoreGui")
+
+TextLabel.Parent = ScreenGui
+TextLabel.Size = UDim2.new(1,0,1,0)
+TextLabel.BackgroundColor3 = Color3.fromRGB(0,0,0)
+TextLabel.TextColor3 = Color3.fromRGB(255,0,0)
+TextLabel.TextScaled = true
+TextLabel.Font = Enum.Font.GothamBold
+TextLabel.Text = "This Script Only Works On One Block"
+
+return
 end
 
--- Load Rayfield
+------------------------------------------------
+-- LOAD RAYFIELD
+------------------------------------------------
+
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
@@ -22,12 +37,18 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
--- Tabs
+------------------------------------------------
+-- TABS
+------------------------------------------------
+
 local PlatformTab = Window:CreateTab("Platform Workbench", 4483362458)
 local GeneralTab = Window:CreateTab("General Workbench", 4483362458)
 local InfoTab = Window:CreateTab("Info", 4483362458)
 
--- Variables
+------------------------------------------------
+-- VARIABLES
+------------------------------------------------
+
 local SelectedBlock = "Cherry"
 local SelectedItem = "Magnet"
 local StackAmount = 1
