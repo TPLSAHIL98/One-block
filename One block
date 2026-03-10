@@ -1,69 +1,67 @@
--- One Block Hub | Created by Sahil | Version 0.1
+-- One Block Hub | Created by Sahil | Version 0.2
 
 ------------------------------------------------
 -- WAIT FOR GAME LOAD
 ------------------------------------------------
-
 repeat task.wait() until game:IsLoaded()
 
 ------------------------------------------------
 -- GAME LOCK (LOBBY + GAME)
 ------------------------------------------------
-
 local AllowedPlaces = {
     [87124461329967] = true,
     [78296331391950] = true
 }
 
 if not AllowedPlaces[game.PlaceId] then
+    local ScreenGui = Instance.new("ScreenGui")
+    local TextLabel = Instance.new("TextLabel")
 
-local ScreenGui = Instance.new("ScreenGui")
-local TextLabel = Instance.new("TextLabel")
+    ScreenGui.Parent = game:GetService("CoreGui")
 
-ScreenGui.Parent = game:GetService("CoreGui")
+    TextLabel.Parent = ScreenGui
+    TextLabel.Size = UDim2.new(1,0,1,0)
+    TextLabel.BackgroundColor3 = Color3.fromRGB(0,0,0)
+    TextLabel.TextColor3 = Color3.fromRGB(255,0,0)
+    TextLabel.TextScaled = true
+    TextLabel.Font = Enum.Font.GothamBold
+    TextLabel.Text = "This Script Only Works On One Block\n\nClosing in 15 seconds..."
 
-TextLabel.Parent = ScreenGui
-TextLabel.Size = UDim2.new(1,0,1,0)
-TextLabel.BackgroundColor3 = Color3.fromRGB(0,0,0)
-TextLabel.TextColor3 = Color3.fromRGB(255,0,0)
-TextLabel.TextScaled = true
-TextLabel.Font = Enum.Font.GothamBold
-TextLabel.Text = "This Script Only Works On One Block\n\nClosing in 15 seconds..."
-
-task.wait(15)
-
-ScreenGui:Destroy()
-
-return
+    task.wait(15)
+    ScreenGui:Destroy()
+    return
 end
+
+------------------------------------------------
+-- SERVICES
+------------------------------------------------
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local PurchaseGeneral = ReplicatedStorage:WaitForChild("PurchaseGeneral")
+local PurchaseTool = ReplicatedStorage:WaitForChild("PurchaseTool")
 
 ------------------------------------------------
 -- LOAD RAYFIELD
 ------------------------------------------------
-
 local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "One Block Hub",
+   Name = "One Block Hub | V0.2",
    LoadingTitle = "One Block Hub",
    LoadingSubtitle = "Created by Sahil",
-   ConfigurationSaving = {
-      Enabled = false
-   }
+   ConfigurationSaving = { Enabled = false }
 })
 
 ------------------------------------------------
 -- TABS
 ------------------------------------------------
-
 local PlatformTab = Window:CreateTab("Platform Workbench", 4483362458)
 local GeneralTab = Window:CreateTab("General Workbench", 4483362458)
+local ToolsTab = Window:CreateTab("Tools", 4483362458)
 local InfoTab = Window:CreateTab("Info", 4483362458)
 
 ------------------------------------------------
 -- VARIABLES
 ------------------------------------------------
-
 local SelectedBlock = "Cherry"
 local SelectedItem = "Magnet"
 local StackAmount = 1
@@ -71,7 +69,6 @@ local StackAmount = 1
 ------------------------------------------------
 -- STACK SLIDER PLATFORM
 ------------------------------------------------
-
 PlatformTab:CreateSlider({
    Name = "Stack Amount",
    Range = {1,100},
@@ -85,7 +82,6 @@ PlatformTab:CreateSlider({
 ------------------------------------------------
 -- STACK SLIDER GENERAL
 ------------------------------------------------
-
 GeneralTab:CreateSlider({
    Name = "Stack Amount",
    Range = {1,100},
@@ -97,18 +93,11 @@ GeneralTab:CreateSlider({
 })
 
 ------------------------------------------------
--- GENERAL ITEMS DROPDOWN
+-- GENERAL ITEMS
 ------------------------------------------------
-
 GeneralTab:CreateDropdown({
    Name = "Select Item",
-   Options = {
-      "Magnet",
-      "Gold Magnet",
-      "Infinity Magnet",
-      "Bandage",
-      "Medkit"
-   },
+   Options = {"Magnet","Gold Magnet","Infinity Magnet","Bandage","Medkit"},
    CurrentOption = {"Magnet"},
    MultipleOptions = false,
    Callback = function(Value)
@@ -116,53 +105,22 @@ GeneralTab:CreateDropdown({
    end
 })
 
-------------------------------------------------
--- GENERAL GIVE BUTTON
-------------------------------------------------
-
 GeneralTab:CreateButton({
    Name = "Give Item",
    Callback = function()
-
       for i = 1, StackAmount do
-
-         local args = {
-            SelectedItem,
-            0
-         }
-
-         game:GetService("ReplicatedStorage")
-         :WaitForChild("PurchaseGeneral")
-         :FireServer(unpack(args))
-
+         PurchaseGeneral:FireServer(SelectedItem,0)
          task.wait(0.2)
-
       end
-
-      Rayfield:Notify({
-         Title = "Success",
-         Content = SelectedItem.." x"..StackAmount.." given!",
-         Duration = 3
-      })
-
    end
 })
 
 ------------------------------------------------
--- PLATFORM DROPDOWN
+-- PLATFORM WORKBENCH
 ------------------------------------------------
-
 PlatformTab:CreateDropdown({
    Name = "Select Platform",
-   Options = {
-      "Cherry",
-      "Grass",
-      "Stone",
-      "Birch",
-      "Bloodwood",
-      "Acacia",
-      "Blackstone"
-   },
+   Options = {"Cherry","Grass","Stone","Birch","Bloodwood","Acacia","Blackstone"},
    CurrentOption = {"Cherry"},
    MultipleOptions = false,
    Callback = function(Value)
@@ -170,53 +128,49 @@ PlatformTab:CreateDropdown({
    end
 })
 
-------------------------------------------------
--- PLATFORM GIVE BUTTON
-------------------------------------------------
-
 PlatformTab:CreateButton({
    Name = "Give Platform",
    Callback = function()
-
       for i = 1, StackAmount do
-
-         local args = {
-            SelectedBlock.." Platform",
-            0
-         }
-
-         game:GetService("ReplicatedStorage")
-         :WaitForChild("PurchaseTool")
-         :FireServer(unpack(args))
-
+         PurchaseTool:FireServer(SelectedBlock.." Platform",0)
          task.wait(0.2)
-
       end
-
-      Rayfield:Notify({
-         Title = "Success",
-         Content = SelectedBlock.." x"..StackAmount.." given!",
-         Duration = 3
-      })
-
    end
 })
 
 ------------------------------------------------
+-- TOOLS TAB (PRO TABLE STYLE, NO STACK)
+------------------------------------------------
+local ToolsList = {
+    "Diamond Pickaxe","Gold Pickaxe","Iron Pickaxe",
+    "Diamond Sword","Gold Sword","Iron Sword",
+    "Diamond Axe","Gold Axe","Iron Axe",
+    "Diamond Shovel","Gold Shovel","Iron Shovel"
+}
+
+for _,tool in pairs(ToolsList) do
+    ToolsTab:CreateButton({
+        Name = tool,
+        Callback = function()
+            PurchaseGeneral:FireServer(tool,0)
+        end
+    })
+end
+
+------------------------------------------------
 -- INFO TAB
 ------------------------------------------------
-
 InfoTab:CreateParagraph({
-Title = "Created by Sahil",
-Content = "Version 0.1"
+    Title = "Created by Sahil",
+    Content = "Version 0.2"
 })
 
 InfoTab:CreateParagraph({
-Title = "Executor Supported",
-Content = "Delta\nCodex"
+    Title = "Executor Supported",
+    Content = "Delta\nCodex"
 })
 
 InfoTab:CreateParagraph({
-Title = "Updates",
-Content = "More Updates In Feature :)"
+    Title = "Updates",
+    Content = "More Updates In Future :)"
 })
